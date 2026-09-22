@@ -1,17 +1,14 @@
 /* ============================================================
-   AMMAR // DIGITAL IDENTITY
-   script.js — Core System
-   ============================================================
+   MAX // DIGITAL IDENTITY — script.js
+   ============================================================ */
 
-   ============ EDIT YOUR INFORMATION BELOW ============
-*/
+/* ============ EDIT YOUR INFORMATION BELOW ============ */
 
 const SITE_CONFIG = {
-  name: "AMMAR",
+  name: "MAX",
   title: "CYBERSECURITY // DEVELOPER",
   description: "Personal digital identity focused on programming, cybersecurity, technology, creative development, and digital experimentation.",
-  location: "ALGERIA",
-  email: "", // leave empty if not configured
+  email: "",
   social: {
     instagram: "https://www.instagram.com/l_m3.1?stkn=N2tyeDQ3b24zOHdi&utm_source=qr",
     tiktok: "https://www.tiktok.com/@maxar.p?_r=1&_t=ZN-99x2zE8xyfG",
@@ -23,20 +20,18 @@ const SITE_CONFIG = {
 const PROFILE_IMAGE = "./profile.jpg";
 
 /* ============================================================
-   END OF CONFIGURATION — DO NOT EDIT BELOW UNLESS NEEDED
+   END OF CONFIGURATION
    ============================================================ */
 
 (function () {
   'use strict';
 
-  /* ---------- UTILITIES ---------- */
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
-
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ============================================================
-     LOADING SCREEN
+     LOADER
      ============================================================ */
   function initLoader() {
     const loader = $('#loader');
@@ -44,10 +39,7 @@ const PROFILE_IMAGE = "./profile.jpg";
     const status = $('#loaderStatus');
     if (!loader) return;
 
-    if (prefersReducedMotion) {
-      loader.classList.add('is-hidden');
-      return;
-    }
+    if (prefersReducedMotion) { loader.classList.add('is-hidden'); return; }
 
     const stages = [
       { p: 25, label: 'INITIALIZING' },
@@ -71,31 +63,24 @@ const PROFILE_IMAGE = "./profile.jpg";
   }
 
   /* ============================================================
-     DYNAMIC PERSONAL INFORMATION
+     CONFIG → DOM
      ============================================================ */
   function applyConfig() {
-    // Hero title & status
     const heroTitle = $('#heroTitle');
     if (heroTitle) heroTitle.textContent = SITE_CONFIG.title;
 
-    // Identity panel
     const idName = $('#idName');
     const idRole = $('#idRole');
-    const idLocation = $('#idLocation');
     if (idName) idName.textContent = SITE_CONFIG.name;
     if (idRole) idRole.textContent = SITE_CONFIG.title;
-    if (idLocation) idLocation.textContent = SITE_CONFIG.location;
 
-    // Update document title
     document.title = `${SITE_CONFIG.name} // CYBERSECURITY & DIGITAL PORTFOLIO`;
 
-    // OG meta
     const ogTitle = document.querySelector('meta[property="og:title"]');
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogTitle) ogTitle.setAttribute('content', `${SITE_CONFIG.name} // CYBERSECURITY & DIGITAL PORTFOLIO`);
     if (ogDesc) ogDesc.setAttribute('content', SITE_CONFIG.description);
 
-    // Profile image
     const img = $('#profileImg');
     if (img) {
       img.src = PROFILE_IMAGE;
@@ -107,9 +92,6 @@ const PROFILE_IMAGE = "./profile.jpg";
     }
   }
 
-  /* ============================================================
-     SOCIAL LINKS
-     ============================================================ */
   function applySocialLinks() {
     $$('[data-social-link]').forEach(link => {
       const key = link.getAttribute('data-social-link');
@@ -117,7 +99,6 @@ const PROFILE_IMAGE = "./profile.jpg";
       const label = link.querySelector('[data-label]');
 
       if (!url || typeof url !== 'string' || url.trim() === '') {
-        // Graceful fallback
         link.setAttribute('aria-disabled', 'true');
         link.classList.add('is-disabled');
         link.removeAttribute('href');
@@ -133,9 +114,6 @@ const PROFILE_IMAGE = "./profile.jpg";
     });
   }
 
-  /* ============================================================
-     EMAIL HANDLING
-     ============================================================ */
   function applyEmail() {
     const emailBtn = $('#emailBtn');
     if (!emailBtn) return;
@@ -169,7 +147,6 @@ const PROFILE_IMAGE = "./profile.jpg";
       menu.setAttribute('aria-hidden', 'false');
       document.body.classList.add('no-scroll');
     };
-
     const close = () => {
       toggle.classList.remove('is-open');
       menu.classList.remove('is-open');
@@ -182,11 +159,7 @@ const PROFILE_IMAGE = "./profile.jpg";
     toggle.addEventListener('click', () => {
       menu.classList.contains('is-open') ? close() : open();
     });
-
-    links.forEach(link => {
-      link.addEventListener('click', () => close());
-    });
-
+    links.forEach(l => l.addEventListener('click', close));
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && menu.classList.contains('is-open')) {
         close();
@@ -205,19 +178,12 @@ const PROFILE_IMAGE = "./profile.jpg";
         if (!href || href === '#') return;
         const target = document.querySelector(href);
         if (!target) return;
-
         e.preventDefault();
-        const navH = 72;
-        const top = target.getBoundingClientRect().top + window.pageYOffset - navH;
-
-        window.scrollTo({
-          top,
-          behavior: prefersReducedMotion ? 'auto' : 'smooth'
-        });
+        const top = target.getBoundingClientRect().top + window.pageYOffset - 72;
+        window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
       });
     });
 
-    // Scroll indicator
     const scrollInd = $('#scrollIndicator');
     if (scrollInd) {
       scrollInd.addEventListener('click', (e) => {
@@ -233,7 +199,7 @@ const PROFILE_IMAGE = "./profile.jpg";
   }
 
   /* ============================================================
-     ACTIVE NAVIGATION
+     ACTIVE NAV
      ============================================================ */
   function initActiveNav() {
     const sections = $$('section[id]');
@@ -241,9 +207,7 @@ const PROFILE_IMAGE = "./profile.jpg";
     if (!sections.length || !navLinks.length) return;
 
     const setActive = (id) => {
-      navLinks.forEach(l => {
-        l.classList.toggle('is-active', l.dataset.section === id);
-      });
+      navLinks.forEach(l => l.classList.toggle('is-active', l.dataset.section === id));
     };
 
     if ('IntersectionObserver' in window) {
@@ -251,10 +215,7 @@ const PROFILE_IMAGE = "./profile.jpg";
         entries.forEach(entry => {
           if (entry.isIntersecting) setActive(entry.target.id);
         });
-      }, {
-        rootMargin: '-45% 0px -45% 0px',
-        threshold: 0
-      });
+      }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
       sections.forEach(s => obs.observe(s));
     }
   }
@@ -271,10 +232,7 @@ const PROFILE_IMAGE = "./profile.jpg";
       ticking = false;
     };
     window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(update);
-        ticking = true;
-      }
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
     }, { passive: true });
     update();
   }
@@ -286,21 +244,15 @@ const PROFILE_IMAGE = "./profile.jpg";
     const bar = $('#progress');
     if (!bar) return;
     let ticking = false;
-
     const update = () => {
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       const p = docH > 0 ? Math.min(window.scrollY / docH, 1) : 0;
       bar.style.transform = `scaleX(${p})`;
       ticking = false;
     };
-
     window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(update);
-        ticking = true;
-      }
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
     }, { passive: true });
-
     window.addEventListener('resize', update, { passive: true });
     update();
   }
@@ -317,22 +269,15 @@ const PROFILE_IMAGE = "./profile.jpg";
     const dot = $('.cursor__dot');
     if (!cursor || !ring || !dot) return;
 
-    let mx = window.innerWidth / 2;
-    let my = window.innerHeight / 2;
-    let rx = mx, ry = my;
-    let active = false;
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let rx = mx, ry = my, active = false;
 
     document.addEventListener('mousemove', (e) => {
-      mx = e.clientX;
-      my = e.clientY;
+      mx = e.clientX; my = e.clientY;
       dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-      if (!active) {
-        active = true;
-        cursor.classList.add('is-active');
-      }
+      if (!active) { active = true; cursor.classList.add('is-active'); }
     }, { passive: true });
 
-    // Smooth ring
     const loop = () => {
       rx += (mx - rx) * 0.18;
       ry += (my - ry) * 0.18;
@@ -341,7 +286,6 @@ const PROFILE_IMAGE = "./profile.jpg";
     };
     loop();
 
-    // Hover states
     const hoverTargets = 'a, button, [data-cursor="hover"], .project-card, .social-card, .skill-card';
     document.addEventListener('mouseover', (e) => {
       if (e.target.closest(hoverTargets)) cursor.classList.add('is-hover');
@@ -349,16 +293,14 @@ const PROFILE_IMAGE = "./profile.jpg";
     document.addEventListener('mouseout', (e) => {
       if (e.target.closest(hoverTargets)) cursor.classList.remove('is-hover');
     });
-
     document.addEventListener('mousedown', () => cursor.classList.add('is-down'));
     document.addEventListener('mouseup', () => cursor.classList.remove('is-down'));
-
     document.addEventListener('mouseleave', () => cursor.classList.remove('is-active'));
     document.addEventListener('mouseenter', () => cursor.classList.add('is-active'));
   }
 
   /* ============================================================
-     REVEAL SYSTEM
+     REVEAL
      ============================================================ */
   function initReveal() {
     const items = $$('.reveal');
@@ -376,30 +318,23 @@ const PROFILE_IMAGE = "./profile.jpg";
           obs.unobserve(entry.target);
         }
       });
-    }, {
-      rootMargin: '0px 0px -80px 0px',
-      threshold: 0.08
-    });
+    }, { rootMargin: '0px 0px -80px 0px', threshold: 0.08 });
 
-    // Stagger within grids
     const groups = {};
     items.forEach(el => {
-      const parent = el.parentElement;
-      if (!groups[parent]) groups[parent] = [];
-      groups[parent].push(el);
+      const p = el.parentElement;
+      if (!groups[p]) groups[p] = [];
+      groups[p].push(el);
     });
-
     Object.values(groups).forEach(group => {
-      group.forEach((el, i) => {
-        el.style.transitionDelay = `${Math.min(i * 60, 400)}ms`;
-      });
+      group.forEach((el, i) => { el.style.transitionDelay = `${Math.min(i * 60, 400)}ms`; });
     });
 
     items.forEach(el => obs.observe(el));
   }
 
   /* ============================================================
-     GLITCH SYSTEM
+     GLITCH
      ============================================================ */
   function initGlitch() {
     if (prefersReducedMotion) return;
@@ -412,18 +347,13 @@ const PROFILE_IMAGE = "./profile.jpg";
       setTimeout(() => el.classList.remove('is-glitching'), 400);
     };
 
-    glitches.forEach(el => {
-      el.addEventListener('mouseenter', () => trigger(el));
-    });
+    glitches.forEach(el => el.addEventListener('mouseenter', () => trigger(el)));
 
-    // Occasional ambient glitch
-    if (glitches.length) {
-      setInterval(() => {
-        if (document.hidden) return;
-        const el = glitches[Math.floor(Math.random() * glitches.length)];
-        trigger(el);
-      }, 7500);
-    }
+    setInterval(() => {
+      if (document.hidden) return;
+      const el = glitches[Math.floor(Math.random() * glitches.length)];
+      trigger(el);
+    }, 7500);
   }
 
   /* ============================================================
@@ -434,14 +364,12 @@ const PROFILE_IMAGE = "./profile.jpg";
       btn.addEventListener('click', async () => {
         const value = btn.getAttribute('data-copy');
         if (!value) return;
-
         let success = false;
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             await navigator.clipboard.writeText(value);
             success = true;
           } else {
-            // Fallback
             const ta = document.createElement('textarea');
             ta.value = value;
             ta.setAttribute('readonly', '');
@@ -452,9 +380,7 @@ const PROFILE_IMAGE = "./profile.jpg";
             success = document.execCommand('copy');
             document.body.removeChild(ta);
           }
-        } catch (err) {
-          success = false;
-        }
+        } catch (err) { success = false; }
 
         const original = btn.textContent;
         btn.textContent = success ? 'COPIED' : 'FAILED';
@@ -468,7 +394,179 @@ const PROFILE_IMAGE = "./profile.jpg";
   }
 
   /* ============================================================
-     PARTICLE BACKGROUND (Canvas)
+     WORLD MAP — visible continents + city dots + arcs
+     ============================================================ */
+  function initWorldMap() {
+    if (prefersReducedMotion) return;
+    const canvas = $('#worldMap');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let raf = null;
+    let running = true;
+    let time = 0;
+
+    /* Simplified continent outlines [lon, lat] */
+    const CONTINENTS = [
+      // North America
+      [[-168,66],[-160,71],[-140,70],[-120,70],[-100,73],[-80,73],[-60,60],[-55,50],[-65,45],[-70,42],[-75,35],[-81,25],[-97,26],[-105,22],[-115,30],[-125,40],[-124,48],[-135,58],[-150,60],[-165,55],[-168,66]],
+      // South America
+      [[-81,8],[-75,11],[-60,11],[-50,0],[-35,-5],[-38,-15],[-48,-25],[-58,-35],[-62,-42],[-68,-55],[-75,-52],[-73,-40],[-71,-30],[-70,-18],[-77,-8],[-81,0],[-81,8]],
+      // Europe
+      [[-10,36],[-9,44],[-2,48],[2,51],[5,53],[8,57],[12,55],[18,55],[22,60],[28,65],[30,70],[25,71],[15,68],[5,60],[-5,50],[-10,43],[-10,36]],
+      // Africa
+      [[-17,15],[-17,21],[-10,27],[0,32],[10,37],[20,32],[32,31],[35,25],[43,12],[51,12],[41,-2],[40,-15],[35,-25],[25,-34],[18,-34],[12,-18],[8,4],[0,5],[-8,4],[-17,15]],
+      // Asia
+      [[30,45],[40,45],[50,45],[60,42],[70,40],[80,45],[90,50],[100,55],[110,60],[120,60],[130,55],[140,50],[145,45],[140,40],[135,35],[125,30],[120,22],[110,20],[100,10],[95,5],[105,0],[115,-5],[120,-8],[115,-10],[105,-5],[100,5],[95,15],[85,20],[75,25],[65,25],[55,25],[45,30],[35,35],[30,45]],
+      // Australia
+      [[113,-22],[114,-33],[118,-35],[125,-33],[132,-32],[140,-38],[148,-38],[153,-30],[153,-25],[146,-18],[135,-12],[125,-14],[118,-18],[113,-22]],
+      // Greenland
+      [[-45,60],[-55,65],[-58,72],[-50,78],[-35,82],[-25,80],[-22,72],[-30,65],[-45,60]]
+    ];
+
+    /* Active cities [lat, lon] */
+    const CITIES = [
+      [40.7,-74.0],[34.0,-118.2],[41.9,-87.6],[29.8,-95.4],[37.8,-122.4],
+      [25.8,-80.2],[19.4,-99.1],[45.5,-73.6],[-23.5,-46.6],[-34.6,-58.4],
+      [-12.0,-77.0],[51.5,-0.1],[48.9,2.3],[52.5,13.4],[41.9,12.5],
+      [40.4,-3.7],[55.7,12.6],[59.3,18.1],[50.1,8.7],[52.4,4.9],
+      [30.0,31.2],[6.5,3.4],[-1.3,36.8],[-26.2,28.0],[14.7,-17.4],
+      [35.7,51.4],[25.2,55.3],[24.9,67.0],[19.1,72.9],[28.6,77.2],
+      [13.7,100.5],[1.4,103.8],[-6.2,106.8],[14.6,121.0],[22.3,114.2],
+      [31.2,121.5],[39.9,116.4],[35.7,139.7],[37.6,127.0],
+      [41.0,28.9],[32.1,34.8],[33.9,35.5],[-33.9,151.2],[-37.8,145.0],[-36.8,174.8]
+    ];
+
+    const project = (lat, lon) => ({
+      x: (lon + 180) / 360 * w,
+      y: (90 - lat) / 180 * h
+    });
+
+    const resize = () => {
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const draw = () => {
+      if (!running) return;
+      ctx.clearRect(0, 0, w, h);
+      time += 0.01;
+
+      /* 1. Continent outlines */
+      ctx.lineWidth = 0.8;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+
+      CONTINENTS.forEach(poly => {
+        ctx.beginPath();
+        poly.forEach(([lon, lat], i) => {
+          const p = project(lat, lon);
+          if (i === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      });
+
+      /* 2. Lat/lon grid */
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.lineWidth = 0.5;
+      for (let lat = -60; lat <= 60; lat += 30) {
+        const a = project(lat, -180);
+        const b = project(lat, 180);
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+      for (let lon = -150; lon <= 150; lon += 30) {
+        const a = project(-90, lon);
+        const b = project(90, lon);
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+
+      /* 3. City dots */
+      const cityPoints = CITIES.map(([lat, lon]) => project(lat, lon));
+      cityPoints.forEach((p, i) => {
+        const phase = (time * 1.2 + i * 0.4) % (Math.PI * 2);
+        const pulse = 0.5 + Math.sin(phase) * 0.5;
+        const r = 1.5 + Math.sin(phase) * 0.6;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.5 + pulse * 0.5})`;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r + 3, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * pulse})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      });
+
+      /* 4. Connection arcs with travelling packet */
+      const arcs = [
+        [0, 18],[18, 22],[22, 30],[30, 35],[35, 41],
+        [10, 25],[25, 32],[5, 20],[15, 28],[33, 39],
+        [8, 40],[42, 2],[3, 11]
+      ];
+
+      arcs.forEach(([i, j], idx) => {
+        if (!cityPoints[i] || !cityPoints[j]) return;
+        const a = cityPoints[i];
+        const b = cityPoints[j];
+        const phase = (time * 0.5 + idx * 0.15) % 1;
+        const alpha = Math.sin(phase * Math.PI) * 0.55;
+
+        const mx = (a.x + b.x) / 2;
+        const my = (a.y + b.y) / 2 - Math.abs(a.x - b.x) * 0.22;
+
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.quadraticCurveTo(mx, my, b.x, b.y);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        const t = phase;
+        const px = (1 - t) * (1 - t) * a.x + 2 * (1 - t) * t * mx + t * t * b.x;
+        const py = (1 - t) * (1 - t) * a.y + 2 * (1 - t) * t * my + t * t * b.y;
+        ctx.beginPath();
+        ctx.arc(px, py, 1.6, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 1.4})`;
+        ctx.fill();
+      });
+
+      raf = requestAnimationFrame(draw);
+    };
+
+    window.addEventListener('resize', resize, { passive: true });
+
+    if ('IntersectionObserver' in window) {
+      const hero = $('.hero');
+      if (hero) {
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (!running) { running = true; draw(); }
+            } else {
+              running = false;
+              if (raf) cancelAnimationFrame(raf);
+            }
+          });
+        }, { threshold: 0 });
+        obs.observe(hero);
+      }
+    }
+
+    resize();
+    draw();
+  }
+
+  /* ============================================================
+     PARTICLES
      ============================================================ */
   function initParticles() {
     if (prefersReducedMotion) return;
@@ -480,17 +578,14 @@ const PROFILE_IMAGE = "./profile.jpg";
     let particles = [];
     let raf = null;
     let running = true;
-
     const mouse = { x: null, y: null };
 
     const resize = () => {
-      w = canvas.clientWidth;
-      h = canvas.clientHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const count = Math.min(Math.floor((w * h) / 22000), 70);
+      const count = Math.min(Math.floor((w * h) / 24000), 60);
       particles = [];
       for (let i = 0; i < count; i++) {
         particles.push({
@@ -510,52 +605,42 @@ const PROFILE_IMAGE = "./profile.jpg";
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-
+        p.x += p.vx; p.y += p.vy;
         if (p.x < -10) p.x = w + 10;
         if (p.x > w + 10) p.x = -10;
         if (p.y < -10) p.y = h + 10;
         if (p.y > h + 10) p.y = -10;
 
-        // Mouse influence
         if (mouse.x !== null) {
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
-          const dist2 = dx * dx + dy * dy;
-          if (dist2 < 14000) {
-            const f = (14000 - dist2) / 14000;
+          const dx = p.x - mouse.x, dy = p.y - mouse.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 14000) {
+            const f = (14000 - d2) / 14000;
             p.x += dx * 0.0025 * f;
             p.y += dy * 0.0025 * f;
           }
         }
-
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 255, 255, ${p.a})`;
         ctx.fill();
       }
 
-      // Subtle connections
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i];
-          const b = particles[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
+          const a = particles[i], b = particles[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
           const d2 = dx * dx + dy * dy;
           if (d2 < 12000) {
             const o = (1 - d2 / 12000) * 0.08;
             ctx.strokeStyle = `rgba(255, 255, 255, ${o})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
+            ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
             ctx.stroke();
           }
         }
       }
-
       raf = requestAnimationFrame(draw);
     };
 
@@ -564,24 +649,17 @@ const PROFILE_IMAGE = "./profile.jpg";
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
     }, { passive: true });
-    canvas.addEventListener('mouseleave', () => {
-      mouse.x = null;
-      mouse.y = null;
-    });
+    canvas.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
 
     window.addEventListener('resize', resize, { passive: true });
 
-    // Pause when hero not visible (perf)
     if ('IntersectionObserver' in window) {
       const hero = $('.hero');
       if (hero) {
         const obs = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              if (!running) {
-                running = true;
-                draw();
-              }
+              if (!running) { running = true; draw(); }
             } else {
               running = false;
               if (raf) cancelAnimationFrame(raf);
@@ -597,24 +675,19 @@ const PROFILE_IMAGE = "./profile.jpg";
   }
 
   /* ============================================================
-     PROFILE IMAGE PARALLAX
+     PORTRAIT PARALLAX
      ============================================================ */
   function initPortraitParallax() {
     if (prefersReducedMotion) return;
     if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
-
-    const wrap = $('.hero__portrait-wrap');
     const img = $('.hero__img');
-    if (!wrap || !img) return;
+    if (!img) return;
 
-    let ticking = false;
-    let tx = 0, ty = 0, cx = 0, cy = 0;
+    let ticking = false, tx = 0, ty = 0, cx = 0, cy = 0;
 
     document.addEventListener('mousemove', (e) => {
-      const cxN = (e.clientX / window.innerWidth - 0.5) * 2;
-      const cyN = (e.clientY / window.innerHeight - 0.5) * 2;
-      tx = cxN * 6;
-      ty = cyN * 6;
+      tx = (e.clientX / window.innerWidth - 0.5) * 12;
+      ty = (e.clientY / window.innerHeight - 0.5) * 12;
 
       if (!ticking) {
         ticking = true;
@@ -624,9 +697,7 @@ const PROFILE_IMAGE = "./profile.jpg";
           img.style.transform = `translate(${cx}px, ${cy}px) scale(1.02)`;
           if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) {
             requestAnimationFrame(loop);
-          } else {
-            ticking = false;
-          }
+          } else ticking = false;
         };
         requestAnimationFrame(loop);
       }
@@ -649,6 +720,7 @@ const PROFILE_IMAGE = "./profile.jpg";
     initReveal();
     initGlitch();
     initClipboard();
+    initWorldMap();
     initParticles();
     initPortraitParallax();
     initLoader();
